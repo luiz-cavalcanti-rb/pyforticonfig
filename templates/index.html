@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config-O-Matic</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Gerador de Configuração FortiGate</h1>
+	
+	<div class="floating-box" id="generated-files">
+        <button onclick="toggleFiles()">Arquivos gerados</button>
+        <div id="files-content">
+            <ul>
+                {% for file in files %}
+                    <li><a href="/static/{{ file }}" download>{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+	
+    <form action="/generate" method="post">
+        <label for="fortigateSN">Numero de série do FortiGate: </label>
+		<input type="text" id="fortigateSN" name="fortigateSN" required><br><br>
+		
+		<label for="obra">Nome da obra: </label>
+		<input type="text" id="obra" name="obra" required><br><br>
+		
+		<label for="wanIP">IP interface wan: </label>
+		<input type="text" id="wanIP" name="wanIP" required><br><br>
+		
+		<label for="wanMASK">Máscara interface wan: </label>
+		<input type="text" id="wanMASK" name="wanMASK" required><br><br>
+		
+		<label for="wanGW">Gateway interface wan: </label>
+		<input type="text" id="wanGW" name="wanGW" required><br><br>
+		
+		<label for="vlan1IP">IP vlan 1: </label>
+		<input type="text" id="vlan1IP" name="vlan1IP" required><br><br>
+		
+		<label for="vlan1MASK">Máscara vlan 1: </label>
+		<input type="text" id="vlan1MASK" name="vlan1MASK" required><br><br>
+		
+		<label for="wificorpVID">VID vlan corporativa: </label>
+		<input type="text" id="wificorpVID" name="wificorpVID" required><br><br>
+		
+		<label for="wificorpIP">IP vlan corporativa: </label>
+		<input type="text" id="wificorpIP" name="wificorpIP" required><br><br>
+		
+		<label for="wificorpMASK">Máscara vlan corporativa: </label>
+		<input type="text" id="wificorpMASK" name="wificorpMASK" required><br><br>
+		
+		<label for="wifiguestVID">VID vlan visitante: </label>
+		<input type="text" id="wifiguestVID" name="wifiguestVID" required><br><br>
+		
+		<label for="wifiguestIP">IP vlan visitante: </label>
+		<input type="text" id="wifiguestIP" name="wifiguestIP" required><br><br>
+		
+		<label for="wifiguestMASK">Máscara vlan visitante: </label>
+		<input type="text" id="wifiguestMASK" name="wifiguestMASK" required><br><br>
+		
+		<label for="devicesVID">VID vlan gerência: </label>
+		<input type="text" id="devicesVID" name="devicesVID" required><br><br>
+		
+		<label for="devicesIP">IP vlan gerência: </label>
+		<input type="text" id="devicesIP" name="devicesIP" required><br><br>
+		
+		<label for="devicesMASK">Máscara vlan gerência: </label>
+		<input type="text" id="devicesMASK" name="devicesMASK" required><br><br>
+		
+		<label for="wificeoVID">VID vlan presidência: </label>
+		<input type="text" id="wificeoVID" name="wificeoVID" required><br><br>
+		
+		<label for="wificeoIP">IP vlan presidência: </label>
+		<input type="text" id="wificeoIP" name="wificeoIP" required><br><br>
+		
+		<label for="wificeoMASK">Máscara vlan presidência: </label>
+		<input type="text" id="wificeoMASK" name="wificeoMASK" required><br><br>
+		
+		<label for="looprbIP">IP loopback RB: </label>
+		<input type="text" id="looprbIP" name="looprbIP" required><br><br>
+		
+		<label for="rbrootPWD">Senha rbroot: </label>
+		<input type="text" id="rbrootPWD" name="rbrootPWD" required><br><br>
+		
+		<label for="ap01IP">IP AcessPoint01: </label>
+		<input type="text" id="ap01IP" name="ap01IP" required><br><br>
+		
+		<label for="ap01MAC">MAC AcessPoint01: </label>
+		<input type="text" id="ap01MAC" name="ap01MAC" required><br><br>
+		
+		<label for="ap02IP">IP AcessPoint02: </label>
+		<input type="text" id="ap02IP" name="ap02IP" required><br><br>
+		
+		<label for="ap02MAC">MAC AcessPoint02: </label>
+		<input type="text" id="ap02MAC" name="ap02MAC" required><br><br>
+		
+		<label for="analyzerIP">IP do FortiAnalyzer: </label>
+		<input type="text" id="analyzerIP" name="analyzerIP" required><br><br>
+
+        <button type="submit">Faz a mágica!</button>
+    </form>
+
+
+	<script>
+        function toggleFiles() {
+            var filesContent = document.getElementById("files-content");
+            filesContent.classList.toggle("hide");
+        }
+    </script>
+</body>
+</html>

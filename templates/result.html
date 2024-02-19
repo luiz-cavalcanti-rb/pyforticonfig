@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hostname }}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Arquivo gerado com sucesso!</h1>
+    <h1>{{ filename }}</h1>
+	<form action="/static/{{ filename }}" method="get">
+		<button type="submit">Baixar</button>
+	</form>
+    <form action="/view_raw" method="post">
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <button type="submit">Visualizar</button>
+    </form>
+	<form action="/">
+        <button type="submit">Voltar</button>
+    </form>
+	
+	<div class="floating-box" id="generated-files">
+        <div id="files-content">
+            <h2>Arquivos anteriores:</h2>
+            <ul>
+                {% for file in files %}
+                    <li><a href="/static/{{ file }}" download>{{ file }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
