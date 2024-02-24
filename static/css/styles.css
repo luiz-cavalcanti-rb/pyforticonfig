@@ -49,6 +49,22 @@ input[type="text"] {
     border-radius: 3px;
 }
 
+input[type="password"] {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+input[type="number"] {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
 button[type="submit"] {
     width: 100%;
     padding: 10px;

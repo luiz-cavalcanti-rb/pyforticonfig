@@ -22,16 +22,16 @@
 	
     <form action="/generate" method="post">
         <label for="fortigateSN">Numero de série do FortiGate: </label>
-		<input type="text" id="fortigateSN" name="fortigateSN" required><br><br>
+		<input type="text" id="fortigateSN" name="fortigateSN" pattern=".{16}" maxlength="16" title="Exactly 16 characters required" required><br><br>
 		
-		<label for="obra">Nome da obra: </label>
+		<label for="obra">Nome: </label>
 		<input type="text" id="obra" name="obra" required><br><br>
 		
 		<label for="wanIP">IP interface wan: </label>
 		<input type="text" id="wanIP" name="wanIP" required><br><br>
 		
 		<label for="wanMASK">Máscara interface wan: </label>
-		<input type="text" id="wanMASK" name="wanMASK" required><br><br>
+		<input type="text" id="wanMASK" name="wanMASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.252" placeholder="255.255.255.252" required><br><br>
 		
 		<label for="wanGW">Gateway interface wan: </label>
 		<input type="text" id="wanGW" name="wanGW" required><br><br>
@@ -40,10 +40,10 @@
 		<input type="text" id="vlan1IP" name="vlan1IP" required><br><br>
 		
 		<label for="vlan1MASK">Máscara vlan 1: </label>
-		<input type="text" id="vlan1MASK" name="vlan1MASK" required><br><br>
+		<input type="text" id="vlan1MASK" name="vlan1MASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.0" placeholder="255.255.255.0" required><br><br>
 		
 		<label for="wificorpVID">VID vlan corporativa: </label>
-		<input type="text" id="wificorpVID" name="wificorpVID" required><br><br>
+		<input type="number" id="wificorpVID" name="wificorpVID" min="1" max="4096" required><br><br>
 		
 		<label for="wificorpIP">IP vlan corporativa: </label>
 		<input type="text" id="wificorpIP" name="wificorpIP" required><br><br>
@@ -52,37 +52,37 @@
 		<input type="text" id="wificorpMASK" name="wificorpMASK" required><br><br>
 		
 		<label for="wifiguestVID">VID vlan visitante: </label>
-		<input type="text" id="wifiguestVID" name="wifiguestVID" required><br><br>
+		<input type="number" id="wifiguestVID" name="wifiguestVID" min="1" max="4096" required><br><br>
 		
 		<label for="wifiguestIP">IP vlan visitante: </label>
 		<input type="text" id="wifiguestIP" name="wifiguestIP" required><br><br>
 		
 		<label for="wifiguestMASK">Máscara vlan visitante: </label>
-		<input type="text" id="wifiguestMASK" name="wifiguestMASK" required><br><br>
+		<input type="text" id="wifiguestMASK" name="wifiguestMASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.0" placeholder="255.255.255.0" required><br><br>
 		
 		<label for="devicesVID">VID vlan gerência: </label>
-		<input type="text" id="devicesVID" name="devicesVID" required><br><br>
+		<input type="number" id="devicesVID" name="devicesVID" min="1" max="4096" required><br><br>
 		
 		<label for="devicesIP">IP vlan gerência: </label>
 		<input type="text" id="devicesIP" name="devicesIP" required><br><br>
 		
 		<label for="devicesMASK">Máscara vlan gerência: </label>
-		<input type="text" id="devicesMASK" name="devicesMASK" required><br><br>
+		<input type="text" id="devicesMASK" name="devicesMASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.0" placeholder="255.255.255.0" required><br><br>
 		
 		<label for="wificeoVID">VID vlan presidência: </label>
-		<input type="text" id="wificeoVID" name="wificeoVID" required><br><br>
+		<input type="number" id="wificeoVID" name="wificeoVID" min="1" max="4096" required><br><br>
 		
 		<label for="wificeoIP">IP vlan presidência: </label>
 		<input type="text" id="wificeoIP" name="wificeoIP" required><br><br>
 		
 		<label for="wificeoMASK">Máscara vlan presidência: </label>
-		<input type="text" id="wificeoMASK" name="wificeoMASK" required><br><br>
+		<input type="text" id="wificeoMASK" name="wificeoMASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.0" placeholder="255.255.255.0" required><br><br>
 		
 		<label for="looprbIP">IP loopback RB: </label>
 		<input type="text" id="looprbIP" name="looprbIP" required><br><br>
 		
 		<label for="rbrootPWD">Senha rbroot: </label>
-		<input type="text" id="rbrootPWD" name="rbrootPWD" required><br><br>
+		<input type="password" id="rbrootPWD" name="rbrootPWD" required><br><br>
 		
 		<label for="ap01IP">IP AcessPoint01: </label>
 		<input type="text" id="ap01IP" name="ap01IP" required><br><br>
@@ -104,6 +104,6 @@
 
 
 	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-	
+
 </body>
 </html>
