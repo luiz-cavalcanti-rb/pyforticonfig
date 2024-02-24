@@ -30,8 +30,8 @@
 		<label for="obra">Nome: </label>
 		<input type="text" id="obra" name="obra" required><br><br>
 		
-		<label for="wanIP">IP interface wan: </label>
-		<input type="text" id="wanIP" name="wanIP" required><br><br>
+		<label for="wanIP">IP / Mask interface wan: </label>
+		<input type="text" id="wanIP" name="wanIP" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
 		
 		<label for="wanMASK">Máscara interface wan: </label>
 		<input type="text" id="wanMASK" name="wanMASK" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" title="Subnet mask must be in dotted decimal format" value="255.255.255.252" placeholder="255.255.255.252" required><br><br>
