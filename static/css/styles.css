@@ -6,7 +6,6 @@ body {
 }
 
 .floating-box {
-            #position: fixed;
             top: 80px;
             right: 20px;
             background-color: #f0f0f0;
