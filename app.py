@@ -91,11 +91,13 @@ def view_raw():
 
 @app.route('/save_file', methods=['POST'])
 def save_file():
-    filename = request.form.get('filename')
-    content = request.form.get('content')
+    data = request.json
+    filename = data.get('filename')
+    content = data.get('content')
 
     if filename and content:
         try:
+            # Write the content to the file
             with open(os.path.join('static', filename), 'w') as f:
                 f.write(content)
             return jsonify({'success': True, 'message': 'File saved successfully.'})
@@ -110,10 +112,9 @@ def edit():
     filename = request.args.get('filename')
     content = get_file_content(filename)
     if content is not None:
-        return render_template('editor.html', filename=filename, content=content)
+        return render_template('editor.html', filename=filename, file_content=content)
     else:
         abort(404)  # Or handle the error appropriately
-
 
 if __name__ == '__main__':
       app.run(debug=True, host='0.0.0.0')
