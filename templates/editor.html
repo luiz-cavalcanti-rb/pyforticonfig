@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Editor - {{ filename }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.1/mode/javascript/javascript.min.js"></script>
+    <style>
+        .CodeMirror {
+            height: 80vh; /* Adjust height as needed */
+            border: 3px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+</p>
+    <b>Config Editor - {{ filename }}</b></p>
+    <textarea id="editor-content">{{ file_content }}</textarea>
+    <button id="save-button">Save</button>
+    <button id="undo-button">Undo Changes</button>
+    <button id="close-button">Close</button>
+
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById('editor-content'), {
+            lineNumbers: true,
+            mode: 'javascript', // You can change the mode as per your file type
+            width: '70%' // Adjust the width as needed
+        });
+        
+        var initialContent = editor.getValue();
+
+        // Function to handle close button click
+        function handleCloseButtonClick() {
+            if (hasContentChanged()) {
+                var confirmSave = confirm("There are unsaved changes. Do you want to save before closing?");
+                if (confirmSave) {
+                    // Save the content and close the editor window if saving is successful
+                    saveContent(closeEditorWindow);
+                } else {
+                    // If the user chooses not to save, close the editor window directly
+                    closeEditorWindow();
+                }
+            } else {
+                // If there are no unsaved changes, close the editor window directly
+                closeEditorWindow();
+            }
+        }
+
+        // Function to save content
+        function saveContent(callback) {
+            var content = editor.getValue();
+            var filename = "{{ filename }}"; // Get the filename from the template
+
+            // Send an AJAX request to the server to save the content
+            fetch('/save_file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: filename,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // If saving is successful, execute the callback function (closeEditorWindow)
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    alert('Content saved successfully!');
+                } else {
+                    alert('Failed to save content: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving content.');
+            });
+        }
+
+        // Function to close the editor window
+        function closeEditorWindow() {
+            // Redirect to another page or close the current window
+            // window.location.href = "/"; // Redirect to the homepage or any other desired page
+            window.close();
+        }
+
+        // Function to undo changes
+        function undoChanges() {
+            editor.undo();
+        }
+
+        // Function to check if content has changed
+        function hasContentChanged() {
+            return editor.getValue() !== initialContent;
+        }
+
+
+        // Function to handle search
+        function handleSearch() {
+            var query = document.getElementById('search-input').value;
+            var cursor = editor.getSearchCursor(query);
+            if (cursor.findNext()) {
+                editor.setSelection(cursor.from(), cursor.to());
+             } else {
+                 alert("No matches found.");
+        }
+}
+
+
+        // Event listener for save button
+        document.getElementById('save-button').addEventListener('click', saveContent);
+
+        // Event listener for undo button
+        document.getElementById('undo-button').addEventListener('click', undoChanges);
+
+        // Event listener for close button
+        document.getElementById('close-button').addEventListener('click', handleCloseButtonClick);
+    </script>
+</body>
+</html>
