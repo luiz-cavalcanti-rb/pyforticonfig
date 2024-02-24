@@ -103,11 +103,7 @@
     </form>
 
 
-	<script>
-        function toggleFiles() {
-            var filesContent = document.getElementById("files-content");
-            filesContent.classList.toggle("hide");
-        }
-    </script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+	
 </body>
 </html>
