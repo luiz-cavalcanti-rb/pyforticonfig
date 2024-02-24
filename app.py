@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, abort
+from flask import Flask, render_template, request, send_from_directory, abort, jsonify
 import os
 
 app = Flask(__name__, static_url_path='/static')
@@ -63,6 +63,15 @@ def generate_config_file(data):
 def get_generated_files():
     return [file for file in os.listdir(os.path.join(app.root_path, 'static')) if file.endswith('.conf')]
 
+def get_file_content(filename):
+    try:
+        with open(os.path.join('static', filename), 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        # Handle file not found error
+        return None
+
+
 @app.route('/static/<path:filename>')
 def download_config(filename):
     return send_from_directory('static', filename, as_attachment=True)
@@ -79,7 +88,33 @@ def view_raw():
             abort(404)
     else:
         abort(400)
-        
+
+@app.route('/save_file', methods=['POST'])
+def save_file():
+    filename = request.form.get('filename')
+    content = request.form.get('content')
+
+    if filename and content:
+        try:
+            with open(os.path.join('static', filename), 'w') as f:
+                f.write(content)
+            return jsonify({'success': True, 'message': 'File saved successfully.'})
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+    else:
+        return jsonify({'success': False, 'message': 'Filename or content is missing.'})
+
+
+@app.route('/edit')
+def edit():
+    filename = request.args.get('filename')
+    content = get_file_content(filename)
+    if content is not None:
+        return render_template('editor.html', filename=filename, content=content)
+    else:
+        abort(404)  # Or handle the error appropriately
+
+
 if __name__ == '__main__':
       app.run(debug=True, host='0.0.0.0')
      #app.run(host='0.0.0.0')

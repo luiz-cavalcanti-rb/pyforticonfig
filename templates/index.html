@@ -4,21 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Config-O-Matic</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
 </head>
 <body>
     <h1>Gerador de Configuração FortiGate</h1>
-	
-	<div class="floating-box" id="generated-files">
+    
+    <div class="floating-box" id="generated-files">
         <button onclick="toggleFiles()">Arquivos gerados</button>
         <div id="files-content">
             <ul>
                 {% for file in files %}
-                    <li><a href="/static/{{ file }}" download>{{ file }}</a></li>
+                    <li>
+                        <span>{{ file }}</span>
+                        <button onclick="openEditor('{{ file }}')">Editar</button>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
+
+    <!-- CodeMirror TextArea -->
+    <div id="editor-container" style="display: none;">
+        <textarea id="file-editor"></textarea>
+        <button onclick="saveFile()">Salvar</button>
+        <button onclick="closeEditor()">Fechar</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- Include CodeMirror JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script> <!-- Example mode, you can change it as needed -->
+    <script>
+        var editor; // Declare editor variable
+        
+        // Function to open file for editing
+		function openEditor(filename) {
+            window.open('/edit?filename=' + encodeURIComponent(filename), '_blank', 'width=800,height=600');
+        }
+		//
+        function editFile(filename) {
+            // Check if editor already exists
+            if (!editor) {
+                // Make AJAX request to get file content
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/static/' + filename, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var content = xhr.responseText;
+                        // Show editor and set content
+                        document.getElementById('editor-container').style.display = 'block';
+                        editor = CodeMirror.fromTextArea(document.getElementById("file-editor"), {
+                            lineNumbers: true, // Enable line numbers
+                            mode: "python" // Set the syntax highlighting mode (you can change it based on your file type)
+                            // You can add more configuration options as needed
+                        });
+                        editor.setValue(content); // Set content in the editor
+                    }
+                };
+                xhr.send();
+            } else {
+                editor.toTextArea(); // Convert editor back to textarea
+                editor = null; // Reset editor variable
+                editFile(filename); // Call editFile again to recreate editor for new file
+            }
+        }
+
+        // Function to save edited file
+        function saveFile() {
+            var filename = document.getElementById('files-content').querySelector('span').innerText;
+            var content = editor.getValue(); // Get content from the editor
+            // Make AJAX request to save file
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/save_file', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert('File saved successfully.');
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                }
+            };
+            xhr.send('filename=' + encodeURIComponent(filename) + '&content=' + encodeURIComponent(content));
+        }
+
+        // Function to close editor without saving
+        function closeEditor() {
+            document.getElementById('editor-container').style.display = 'none';
+        }
+    </script>
+</body>
 	
     <form action="/generate" method="post">
         <label for="fortigateSN">Numero de série do FortiGate: </label>

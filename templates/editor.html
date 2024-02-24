@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config-O-Matic</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+</head>
+<body>
+    <h1>Edit File: {{ filename }}</h1>
+
+    <!-- CodeMirror TextArea -->
+    <textarea id="file-editor">{{ content }}</textarea>
+    <button onclick="saveFile()">Save</button>
+    <button onclick="closeEditor()">Close</button>
+
+    <!-- Include CodeMirror JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script> <!-- Example mode, you can change it as needed -->
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("file-editor"), {
+            lineNumbers: true, // Enable line numbers
+            mode: "python" // Set the syntax highlighting mode (you can change it based on your file type)
+            // You can add more configuration options as needed
+        });
+
+        function saveFile() {
+            var content = editor.getValue(); // Get content from the editor
+            // Make AJAX request to save file
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/save_file', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert('File saved successfully.');
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                }
+            };
+            xhr.send('filename={{ filename }}&content=' + encodeURIComponent(content));
+        }
+
+        function closeEditor() {
+            window.close();
+        }
+    </script>
+</body>
+</html>
