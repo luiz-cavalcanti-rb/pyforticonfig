@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_from_directory, abort, jsonify
-import os
+import os, ipaddress
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -7,7 +7,6 @@ app = Flask(__name__, static_url_path='/static')
 def index():
     generated_files = [file for file in os.listdir(os.path.join(app.root_path, 'static')) if file.endswith('.conf')]
     return render_template('index.html', files=generated_files)
-
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -31,12 +30,22 @@ def generate():
         'ap01MAC': request.form['ap01MAC'],
         'ap02IP': request.form['ap02IP'],
         'ap02MAC': request.form['ap02MAC'],
-        'hostNAME': request.form['fortigateSN']+"-"+request.form['obra'],
+        'hostNAME': request.form['fortigateSN'] + "-" + request.form['obra'],
         'analyzerIP': request.form['analyzerIP']
     }
+
+    # Extract IP address and subnet mask for each IPCIDR field
+    for field in ['wanIPCIDR', 'vlan1IPCIDR', 'wificorpIPCIDR', 'wifiguestIPCIDR', 'devicesIPCIDR', 'wificeoIPCIDR']:
+        ip_cidr = request.form[field]
+        ip_address, cidr = ip_cidr.split('/')
+        subnet_mask = ipaddress.ip_network(ip_cidr, strict=False).netmask
+        data[field.replace('IPCIDR', 'IP')] = ip_address
+        data[field.replace('IPCIDR', 'Subnet')] = str(subnet_mask)
+
     # Generate hostname and configuration
     hostname, filename = generate_config_file(data)
     return render_template('result.html', hostname=hostname, filename=filename, files=get_generated_files())
+
 
 def generate_config_file(data):
     # Generate hostname
@@ -112,4 +121,3 @@ def edit():
 
 if __name__ == '__main__':
       app.run(debug=True, host='0.0.0.0')
-     #app.run(host='0.0.0.0')
