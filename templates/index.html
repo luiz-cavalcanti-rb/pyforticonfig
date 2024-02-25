@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Config-O-Matic</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	<style>
+        /* CSS for reducing the width of DHCP fields */
+        .dhcp-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        
+        .dhcp-container label {
+            flex: 0 0 100px; /* Adjust the width of the label */
+            margin-right: 10px; /* Add some spacing between label and input */
+        }
+        
+        .dhcp-container input {
+            width: 100px; /* Adjust the width of the input */
+			margin-right: 10px; /* Add some spacing between label and input */
+        }
+		/* CSS for reducing the width of fields and aligning them side by side */
+        .field-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .field-container label {
+            flex: 0 0 150px; /* Adjust the width of the label */
+        }
+
+        .field-container input {
+            width: 150px; /* Adjust the width of the input */
+        }
+    </style>
 </head>
 <body>
     <h1>Gerador de Configuração FortiGate</h1>
@@ -32,53 +64,89 @@
         <label for="wanIPCIDR">IP interface wan (CIDR notation): </label>
         <input type="text" id="wanIPCIDR" name="wanIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
         
-        <label for="wanGW">Gateway interface wan: </label>
+		<label for="wanGW">Gateway interface wan: </label>
         <input type="text" id="wanGW" name="wanGW" required><br><br>
         
         <label for="vlan1IPCIDR">IP vlan 1 (CIDR notation): </label>
         <input type="text" id="vlan1IPCIDR" name="vlan1IPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
+		
+		<div class="dhcp-container">
+            <label for="vlan1DHCPS">DHCP Start: </label>
+            <input type="number" id="vlan1DHCPS" name="vlan1DHCPS" min="1" max="254" required>
+            <label for="vlan1DHCPE">DHCP End: </label>
+            <input type="number" id="vlan1DHCPE" name="vlan1DHCPE" min="1" max="254" required>
+        </div>
+		
+        <div class="field-container">
+            <label for="wificorpVID">VID vlan gerência: </label>
+            <input type="number" id="wificorpVID" name="wificorpVID" min="1" max="4096" required>
+            <label for="wificorpIPCIDR">IP vlan gerência (CIDR notation): </label>
+            <input type="text" id="wificorpIPCIDR" name="wificorpIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required>
+        </div>
         
-        <label for="wificorpVID">VID vlan corporativa: </label>
-        <input type="number" id="wificorpVID" name="wificorpVID" min="1" max="4096" required><br><br>
-        
-        <label for="wificorpIPCIDR">IP vlan corporativa (CIDR notation): </label>
-        <input type="text" id="wificorpIPCIDR" name="wificorpIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
-        
+		<div class="dhcp-container">
+            <label for="wificorpDHCPS">DHCP Start: </label>
+            <input type="number" id="wificorpDHCPS" name="wificorpDHCPS" min="1" max="254" required>
+            <label for="wificorpDHCPE">DHCP End: </label>
+            <input type="number" id="wificorpDHCPE" name="wificorpDHCPE" min="1" max="254" required>
+        </div>
+		
         <label for="wifiguestVID">VID vlan visitante: </label>
         <input type="number" id="wifiguestVID" name="wifiguestVID" min="1" max="4096" required><br><br>
         
         <label for="wifiguestIPCIDR">IP vlan visitante (CIDR notation): </label>
         <input type="text" id="wifiguestIPCIDR" name="wifiguestIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
         
+		<div class="dhcp-container">
+            <label for="wifiguestDHCPS">DHCP Start: </label>
+            <input type="number" id="wifiguestDHCPS" name="wifiguestDHCPS" min="1" max="254" required>
+            <label for="wifiguestDHCPE">DHCP End: </label>
+            <input type="number" id="wifiguestDHCPE" name="wifiguestDHCPE" min="1" max="254" required>
+        </div>
+		
         <label for="devicesVID">VID vlan gerência: </label>
         <input type="number" id="devicesVID" name="devicesVID" min="1" max="4096" required><br><br>
         
         <label for="devicesIPCIDR">IP vlan gerência (CIDR notation): </label>
         <input type="text" id="devicesIPCIDR" name="devicesIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
         
+		<div class="dhcp-container">
+            <label for="devicesDHCPS">DHCP Start: </label>
+            <input type="number" id="devicesDHCPS" name="devicesDHCPS" min="1" max="254" required>
+            <label for="devicesDHCPE">DHCP End: </label>
+            <input type="number" id="devicesDHCPE" name="devicesDHCPE" min="1" max="254" required>
+		</div>
+		<div class="dhcp-container">
+			<label for="ap01MAC">MAC AP01: </label>
+			<input type="text" id="ap01MAC" name="ap01MAC" required><br><br>
+			<label for="ap01IP">IP AP01: </label>
+			<input type="text" id="ap01IP" name="ap01IP" required><br><br>     
+		</div>
+		<div class="dhcp-container">
+			<label for="ap02MAC">MAC AP02: </label>
+			<input type="text" id="ap02MAC" name="ap02MAC" required><br><br>
+			<label for="ap02IP">IP AP02: </label>
+			<input type="text" id="ap02IP" name="ap02IP" required><br><br>
+        </div>
+		
         <label for="wificeoVID">VID vlan presidência: </label>
         <input type="number" id="wificeoVID" name="wificeoVID" min="1" max="4096" required><br><br>
         
         <label for="wificeoIPCIDR">IP vlan presidência (CIDR notation): </label>
         <input type="text" id="wificeoIPCIDR" name="wificeoIPCIDR" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}" required><br><br>
         
+		<div class="dhcp-container">
+            <label for="wificeoDHCPS">DHCP Start: </label>
+            <input type="number" id="wificeoDHCPS" name="wificeoDHCPS" min="1" max="254" required>
+            <label for="wificeoDHCPE">DHCP End: </label>
+            <input type="number" id="wificeoDHCPE" name="wificeoDHCPE" min="1" max="254" required>
+        </div>		
+		
         <label for="looprbIP">IP loopback RB: </label>
         <input type="text" id="looprbIP" name="looprbIP" required><br><br>
         
         <label for="rbrootPWD">Senha rbroot: </label>
         <input type="password" id="rbrootPWD" name="rbrootPWD" required><br><br>
-        
-        <label for="ap01IP">IP AcessPoint01: </label>
-        <input type="text" id="ap01IP" name="ap01IP" required><br><br>
-        
-        <label for="ap01MAC">MAC AcessPoint01: </label>
-        <input type="text" id="ap01MAC" name="ap01MAC" required><br><br>
-        
-        <label for="ap02IP">IP AcessPoint02: </label>
-        <input type="text" id="ap02IP" name="ap02IP" required><br><br>
-        
-        <label for="ap02MAC">MAC AcessPoint02: </label>
-        <input type="text" id="ap02MAC" name="ap02MAC" required><br><br>
         
         <label for="analyzerIP">IP do FortiAnalyzer: </label>
         <input type="text" id="analyzerIP" name="analyzerIP" required><br><br>

@@ -32,15 +32,35 @@ def generate():
         'ap02MAC': request.form['ap02MAC'],
         'hostNAME': request.form['fortigateSN'] + "-" + request.form['obra'],
         'analyzerIP': request.form['analyzerIP']
+        
     }
 
     # Extract IP address and subnet mask for each IPCIDR field
     for field in ['wanIPCIDR', 'vlan1IPCIDR', 'wificorpIPCIDR', 'wifiguestIPCIDR', 'devicesIPCIDR', 'wificeoIPCIDR']:
         ip_cidr = request.form[field]
         ip_address, cidr = ip_cidr.split('/')
+        ip_network = ipaddress.ip_network(ip_cidr, strict=False)
         subnet_mask = ipaddress.ip_network(ip_cidr, strict=False).netmask
+        data[field.replace('IPCIDR', 'NET')] = str(ip_network.network_address)
         data[field.replace('IPCIDR', 'IP')] = ip_address
-        data[field.replace('IPCIDR', 'Subnet')] = str(subnet_mask)
+        data[field.replace('IPCIDR', 'SUBNET')] = str(subnet_mask)
+        
+    for field in ['vlan1IPCIDR', 'wificorpIPCIDR', 'wifiguestIPCIDR', 'devicesIPCIDR', 'wificeoIPCIDR']:
+        ip_cidr = request.form[field]
+        ip_address, cidr = ip_cidr.split('/')
+        # Get DHCP start and end from form fields
+        dhcp_start = int(request.form[field.replace('IPCIDR', 'DHCPS')])
+        dhcp_end = int(request.form[field.replace('IPCIDR', 'DHCPE')])
+
+        # Replace last octet of IP address with DHCP start and end values
+        ip_address_parts = ip_address.split('.')
+        ip_address_parts[-1] = str(dhcp_start)
+        data[field.replace('IPCIDR', 'DHCPStart')] = '.'.join(ip_address_parts)
+
+        ip_address_parts[-1] = str(dhcp_end)
+        data[field.replace('IPCIDR', 'DHCPEnd')] = '.'.join(ip_address_parts)
+        
+        
 
     # Generate hostname and configuration
     hostname, filename = generate_config_file(data)
